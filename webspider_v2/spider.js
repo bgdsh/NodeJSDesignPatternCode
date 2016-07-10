@@ -4,33 +4,42 @@ var mkdirp=require('mkdirp');
 var path=require('path');
 var utilities=require('./utilities');
 
+function saveFile(filename,contents,callback) {
+  mkdirp(path.dirname(filename),function(err){
+    if(err){
+      return callback(err);
+    }
+    fs.writeFile(filename,contents,callback);
+  })
+}
+function download(url,filename,callback) {
+  console.log('Downloading'+url+'\n');
+  request(url,function(err,response,body){
+    if(err){
+      return callback(err);
+    }
+    saveFile(filename,body,function(err){
+      console.log('Downloading and saved :'+url+'\n');
+      if(err){
+        return callback(err);
+      }
+      callback(null,filename);
+    })
+  })
+}
+
 function spider(url,callback) {
   var filename=utilities.urlToFilename(url);
   fs.exists(filename,function (exists) {
-    if(!exists){
-      console.log('Downloading '+ url)
-      request(url,function (err, response, body) {
-        if(err){
-          callback(err);
-        }else{
-          mkdirp(path.dirname(filename),function (err) {
-            if(err){
-              callback(err);
-            }else{
-              fs.writeFile(filename,body,function (err) {
-                if(err){
-                  callback(err);
-                }else{
-                  callback(null,filename,true);
-                }
-              })
-            }
-          })
-        }
-      })
-    }else{
-      callback(null,filename,false);
+    if(exists){
+      return callback(null,filename,false);
     }
+    download(url,filename,function (err) {
+      if(err){
+        return callback(err);
+      }
+      callback(null,filename,true);
+    })
   })
 }
 
