@@ -13,14 +13,27 @@ TaskQueue.prototype.pushTask = function (task, callback) {
     this.next();
 };
 
+// 纯Javascript版本
+// TaskQueue.prototype.next = function () {
+//     var self = this;
+//     while (self.running < self.concurrency && self.queue.length) {
+//         var task = self.queue.shift();
+//         task(function (err) {
+//             self.running--;
+//             self.next();
+//         });
+//         self.running++;
+//     }
+// };
+
 TaskQueue.prototype.next = function () {
     var self = this;
     while (self.running < self.concurrency && self.queue.length) {
         var task = self.queue.shift();
-        task(function (err) {
+        task().then(function () {
             self.running--;
             self.next();
         });
         self.running++;
     }
-};
+}
