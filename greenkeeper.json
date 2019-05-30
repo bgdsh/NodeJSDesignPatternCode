@@ -1,0 +1,18 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "ChatServer/UsingAMQP/package.json",
+        "HashsumCracker/package.json",
+        "cluster_module/package.json",
+        "webspider_async/package.json",
+        "webspider_promise/package.json",
+        "webspider_v1.1/package.json",
+        "webspider_v1/package.json",
+        "webspider_v2/package.json",
+        "webspider_v3/package.json",
+        "webspider_v4/package.json"
+      ]
+    }
+  }
+}
